@@ -1,0 +1,50 @@
+#!/bin/bash
+#All Right reserved for Shayan Aslani. email: aslani.shayan90@gmail.com
+if [ $# -gt 0 ];then
+	echo "number of arguman is: $#"
+else
+	echo "Usage:$0 ‫‪[-i‬‬ ‫‪INTERVAL]‬‬ [-n‬‬ ‫‪NUMBER]‬‬ ‫‪COMMAND‬‬"
+	exit 1
+fi
+
+TRY_INTERVAL_DEFAULT=5
+TRY_NUMBER_DEFAULT=12
+TRY_COMMAND=NULL
+
+while [ -n "$1" ]
+do
+case "$1" in
+-i) TRY_INTERVAL="$2"
+echo "Found the -i option with parameter value $TRY_INTERVAL"
+if ! [[ "$2" =~ ^[0-9]+$ ]];then
+	echo "$2 is not an integer"
+	exit 1
+fi
+shift;;
+-n) TRY_NUMBER="$2"
+echo "Found the -n option, with parameter value $TRY_NUMBER"
+shift ;;
+
+*) echo "command is: $*" 
+TRY_COMMAND=$*
+break ;;
+esac
+shift
+done
+
+echo "interval: ${TRY_INTERVAL:-$TRY_INTERVAL_DEFAULT} \
+number of try: ${TRY_NUMBER:-$TRY_NUMBER_DEFAULT} \
+command: $TRY_COMMAND"
+
+COUNT=0
+while [[ $COUNT -ne ${TRY_NUMBER:-$TRY_NUMBER_DEFAULT} ]];do
+$TRY_COMMAND
+if [[ $? -eq 0 ]];then
+	exit 0
+elif [[ $(( $COUNT +1 )) -eq ${TRY_NUMBER:-$TRY_NUMBER_DEFAULT} && $? -ne 0 ]];then
+	exit 1
+fi
+
+COUNT=$(( $COUNT +1 ))
+sleep ${TRY_INTERVAL:-$TRY_INTERVAL_DEFAULT}
+done
