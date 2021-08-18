@@ -1,5 +1,5 @@
 #!/bin/bash
-#All Right reserved for Shayan Aslani. email: aslani.shayan90@gmail.com
+# Shayan Aslani, email: aslani.shayan90@gmail.com
 if [ $# -gt 0 ];then
 	echo "number of arguman is: $#"
 else
